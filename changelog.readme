@@ -1,0 +1,17 @@
+1.0.1
+- The Que will now update even when an item is manually equipped
+- Added item tooltips to the jewelry lists
+
+1.0.0
+- Full release version
+- Added help and tooltip information
+- Added error checking for if the next item in the list is already equipped
+- Fixed an issue with the display time on the notificaion panel
+
+0.1.0
+- Second test version
+- Added profile management
+
+0.0.1
+- First test version
+- Missing profile management, tooltips, other finishing touches
