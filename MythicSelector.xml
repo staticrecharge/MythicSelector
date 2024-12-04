@@ -86,7 +86,7 @@
 
     <!-- Indicator Window -->
     <TopLevelControl name="MS_Indicator" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="false">
-      <Dimensions x="150" y ="40" />
+      <Dimensions x="150" y="40" />
       <Anchor point="RIGHT" relativeTo="GuiRoot" relativePoint="RIGHT" offsetX="0" offsetY="0" />
       <OnMoveStop> MS_IND_ON_MOVE_STOP() </OnMoveStop>
       <Controls>
@@ -97,15 +97,17 @@
         </Backdrop>
 
         <!-- Necklace Display Label -->
-        <Label name="$(parent)NecklaceLabel" font="ZoFontGameSmall" horizontalAlignment="LEFT" verticalAlignment="CENTER" wrapMode="ELLIPSIS">
+        <Label name="$(parent)NecklaceLabel" font="ZoFontGameSmall" horizontalAlignment="LEFT" verticalAlignment="TOP" wrapMode="TRUNCATE" maxLineCount="1">
           <Dimensions x="146" y ="20" />
-          <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2" offsetY="0" />
+          <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+          <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
         </Label>
 
         <!-- Ring Display Label -->
-        <Label name="$(parent)RingLabel" font="ZoFontGameSmall" horizontalAlignment="LEFT" verticalAlignment="CENTER" wrapMode="ELLIPSIS">
+        <Label name="$(parent)RingLabel" font="ZoFontGameSmall" horizontalAlignment="LEFT" verticalAlignment="BOTTOM" wrapMode="TRUNCATE" maxLineCount="1">
           <Dimensions x="146" y ="20" />
-          <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="2" offsetY="0" />
+          <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+          <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
         </Label>
 
       </Controls>

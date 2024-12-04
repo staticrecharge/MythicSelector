@@ -1,3 +1,9 @@
+1.1.0
+- Fixed issues with items not being found in inventory (thanks shadowcep)
+- Fixed issues with detecting if an item was worn already (thanks shadowcep)
+- Added the ability to change the font size of the indicator
+- Added the option to change the alignment of the text from left to right for the indicator
+
 1.0.1
 - The Que will now update even when an item is manually equipped
 - Added item tooltips to the jewelry lists

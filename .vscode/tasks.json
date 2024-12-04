@@ -6,7 +6,7 @@
     {
       "label": "copy",
       "type": "shell",
-      "command": "robocopy 'D:\\Documents\\Add-on Dev\\MythicSelector' 'D:\\Documents\\Elder Scrolls Online\\live\\AddOns\\MythicSelector' MythicSelector.txt MythicSelector.lua MythicSelector.xml changelog.readme",
+      "command": "robocopy 'D:\\Documents\\Add-on Dev\\MythicSelector' 'D:\\Documents\\Elder Scrolls Online\\live\\AddOns\\MythicSelector' MythicSelector.txt MythicSelector.lua MythicSelector.xml changelog.readme Settings.lua",
       "problemMatcher": [],
       "group": {
         "kind": "build",

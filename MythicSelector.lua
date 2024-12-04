@@ -1,7 +1,7 @@
 --[[----------------------------------------------
 Title: Mythic Selector
 Author: Static_Recharge
-Version: 1.0.0
+Version: 1.1.0
 Description: Allows for fast switching between Mythic jewelry and regular jewelry.
 ----------------------------------------------]]--
 
@@ -11,7 +11,7 @@ Addon Information
 ----------------------------------------------]]--
 local MS = _G["MS"] -- Global access to table
 MS.addonName = "MythicSelector"
-MS.addonVersion = "1.0.1"
+MS.addonVersion = "1.1.0"
 MS.author = "|CFF0000Static_Recharge|r"
 
 
@@ -64,6 +64,9 @@ MS.AccountWideDefaults = {
 	indicatorFadeDelay = 2,
 	CharacterList = {},
 	CharacterIDList = {},
+	fontSize = 13,
+	width = 150,
+	rightAlign = false,
 }
 
 MS.ProfileDefaults = {
@@ -114,7 +117,12 @@ function MS.InCombat()
 end
 
 function MS.FormatItemDisplay(icon, displayName, size)
-	local formattedString = "|t" .. size .. ":" .. size .. ":" .. icon .. "|t " .. displayName
+	local formattedString
+	if MS.SavedVars.rightAlign then 
+		formattedString = displayName .. "|t" .. size .. ":" .. size .. ":" .. icon .. "|t "
+	else
+		formattedString = "|t" .. size .. ":" .. size .. ":" .. icon .. "|t " .. displayName
+	end
 	return formattedString
 end
 
@@ -194,14 +202,14 @@ function MS.OtherMythicEquipped(equipType)
 end
 
 function MS.GetInventoryIndex(item)
-	local index = nil
-	for i=1,GetNumBagUsedSlots(BAG_BACKPACK) do
-		if item.itemLink == GetItemLink(BAG_BACKPACK, i, LINK_STYLE_BRACKETS) then
-			index = i
-			break
+	local bag, style = BAG_BACKPACK, LINK_STYLE_BRACKETS
+	local slot = ZO_GetNextBagSlotIndex(bag)
+	while slot do
+		if HasItemInSlot(bag, slot)	and item.itemLink == GetItemLink(bag, slot, style) then
+			return slot
 		end
+		slot = ZO_GetNextBagSlotIndex(bag, slot)
 	end
-	return index
 end
 
 function MS.EquipNextItem(equipType)
@@ -216,7 +224,7 @@ function MS.EquipNextItem(equipType)
 			if MS.neckIndex <= 0 then MS.neckIndex = #MS.SavedVars[MS.nameSpace].Necklaces end
 			return
 		end
-		if GetItemLink(BAG_BACKPACK, EQUIP_SLOT_NECK, LINK_STYLE_BRACKETS) == MS.SavedVars[MS.nameSpace].Necklaces[MS.neckIndex].itemLink then
+		if GetItemLink(BAG_WORN, EQUIP_SLOT_NECK, LINK_STYLE_BRACKETS) == MS.SavedVars[MS.nameSpace].Necklaces[MS.neckIndex].itemLink then
 			MS.SendToChat(MS.SavedVars[MS.nameSpace].Necklaces[MS.neckIndex].itemLink .. " is already equipped.")
 			return
 		end
@@ -232,7 +240,7 @@ function MS.EquipNextItem(equipType)
 			if MS.ringIndex <= 0 then MS.ringIndex = #MS.SavedVars[MS.nameSpace].Rings end
 			return
 		end
-		if GetItemLink(BAG_BACKPACK, EQUIP_SLOT_RING1, LINK_STYLE_BRACKETS) == MS.SavedVars[MS.nameSpace].Rings[MS.ringIndex].itemLink then
+		if GetItemLink(BAG_WORN, EQUIP_SLOT_RING1, LINK_STYLE_BRACKETS) == MS.SavedVars[MS.nameSpace].Rings[MS.ringIndex].itemLink then
 			MS.SendToChat(MS.SavedVars[MS.nameSpace].Rings[MS.ringIndex].itemLink .. " is already equipped.")
 			return
 		end
@@ -364,9 +372,12 @@ function MS.RestoreIndicator()
 	local ringIcon = GetItemInfo(BAG_WORN, EQUIP_SLOT_RING1)
 	local ringDisplayName = GetItemLink(BAG_WORN, EQUIP_SLOT_RING1, LINK_STYLE_NO_BRACKETS)
 
-	MS_IndicatorNecklaceLabel:SetText(MS.FormatItemDisplay(neckIcon, neckDisplayName, 16))
-	MS_IndicatorRingLabel:SetText(MS.FormatItemDisplay(ringIcon, ringDisplayName, 16))
+	MS_IndicatorNecklaceLabel:SetText(MS.FormatItemDisplay(neckIcon, neckDisplayName, MS_IndicatorNecklaceLabel:GetFontHeight()))
+	MS_IndicatorRingLabel:SetText(MS.FormatItemDisplay(ringIcon, ringDisplayName, MS_IndicatorRingLabel:GetFontHeight()))
+	MS_Indicator:SetWidth(MS.SavedVars.width + 10)
+	MS.SetFontSize()
 	MS.ShowIndicator()
+	MS.ChangeAlignment()
 end
 
 function MS.UpdateIndicator()
@@ -375,8 +386,8 @@ function MS.UpdateIndicator()
 	local ringIcon = GetItemInfo(BAG_WORN, EQUIP_SLOT_RING1)
 	local ringDisplayName = GetItemLink(BAG_WORN, EQUIP_SLOT_RING1, LINK_STYLE_NO_BRACKETS)
 
-	MS_IndicatorNecklaceLabel:SetText(MS.FormatItemDisplay(neckIcon, neckDisplayName, 16))
-	MS_IndicatorRingLabel:SetText(MS.FormatItemDisplay(ringIcon, ringDisplayName, 16))
+	MS_IndicatorNecklaceLabel:SetText(MS.FormatItemDisplay(neckIcon, neckDisplayName, MS_IndicatorNecklaceLabel:GetFontHeight()))
+	MS_IndicatorRingLabel:SetText(MS.FormatItemDisplay(ringIcon, ringDisplayName, MS_IndicatorNecklaceLabel:GetFontHeight()))
 
 	if MS.SavedVars.indicatorShowOnChange then
 		MS.ShowIndicatorOnChange(true)
@@ -392,7 +403,6 @@ function MS.ShowIndicator()
 	if not neckHidden and not ringHidden then
 		MS.indicatorHidden = false
 		MS_Indicator:SetHidden(false)
-		MS_Indicator:SetDimensions(150, 40)
 
 	elseif neckHidden and ringHidden then
 		MS.indicatorHidden = true
@@ -401,13 +411,14 @@ function MS.ShowIndicator()
 	elseif neckHidden or ringHidden then
 		MS.indicatorHidden = false
 		MS_Indicator:SetHidden(false)
-		MS_Indicator:SetDimensions(150, 20)
 	end
 
 	if MS.SavedVars.indicatorShowOnChange then
 		MS.indicatorHidden = true
 		MS_Indicator:SetHidden(true)
 	end
+
+	MS.SetFontSize()
 end
 
 function MS.ShowIndicatorOnChange(show)
@@ -420,6 +431,32 @@ function MS.ShowIndicatorOnChange(show)
 		MS.indicatorHidden = true
 		MS_Indicator:SetHidden(true)
 	end
+end
+
+function MS.SetFontSize()
+	local window, neck, ring = WM:GetControlByName("MS_Indicator"), WM:GetControlByName("MS_IndicatorNecklaceLabel"), WM:GetControlByName("MS_IndicatorRingLabel")
+	neck:SetFont(string.format("$(BOLD_FONT)|$(KB_%d)|soft-shadow-thin", MS.SavedVars.fontSize))
+	ring:SetFont(string.format("$(BOLD_FONT)|$(KB_%d)|soft-shadow-thin", MS.SavedVars.fontSize))
+	local neckHidden = not MS.SavedVars[MS.nameSpace].neckIndicator
+	local ringHidden = not MS.SavedVars[MS.nameSpace].ringIndicator
+	local height = neck:GetFontHeight()
+	if not neckHidden and not ringHidden then
+		height = height * 2
+	end
+	window:SetHeight(height + 2)
+	MS.UpdateIndicator()
+end
+
+function MS.ChangeAlignment()
+	local neck, ring = WM:GetControlByName("MS_IndicatorNecklaceLabel"), WM:GetControlByName("MS_IndicatorRingLabel")
+	if MS.SavedVars.rightAlign then
+		neck:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
+		ring:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
+	else
+		neck:SetHorizontalAlignment(TEXT_ALIGN_LEFT)
+		ring:SetHorizontalAlignment(TEXT_ALIGN_LEFT)
+	end
+	MS.UpdateIndicator()
 end
 
 

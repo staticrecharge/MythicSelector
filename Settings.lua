@@ -80,6 +80,38 @@ function MS.CreateSettingsWindow()
 	})
 
 	table.insert(optionsData, {
+		type = "slider",
+		name = "Font Size",
+		getFunc = function() return MS.SavedVars.fontSize end,
+		setFunc = function(var) MS.SavedVars.fontSize = var MS.SetFontSize() end,
+		width = "full",
+    min = 10,
+    max = 30,
+    step = 1,
+    clampInput = true,
+	})
+
+	table.insert(optionsData, {
+		type = "slider",
+		name = "Indicator Width",
+		getFunc = function() return MS.SavedVars.width end,
+		setFunc = function(var) MS.SavedVars.width = var MS_Indicator:SetWidth(var) end,
+		width = "full",
+    min = 100,
+    max = 500,
+    step = 10,
+    clampInput = false,
+	})
+
+	table.insert(optionsData, {
+		type = "checkbox",
+		name = "Right Align Text",
+		getFunc = function() return MS.SavedVars.rightAlign end,
+		setFunc = function(var) MS.SavedVars.rightAlign = var MS.ChangeAlignment() end,
+		width = "full",
+	})
+
+	table.insert(optionsData, {
 		type = "divider",
     width = "full",
     alpha = 0.0,
