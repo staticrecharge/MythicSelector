@@ -287,7 +287,7 @@ function MS.UpdateScrollList(equipType)
 	elseif equipType == EQUIP_TYPE_RING then
 		Data = MS.SavedVars[MS.nameSpace].Rings
 	end
-	local parent = ScrollBox
+	local parent = MS_PanelScrollBox
 	local name = "MSListEntry"
 	local template = "MSListTemplate"
 	for i,v in ipairs(Data) do
@@ -568,7 +568,7 @@ function MS.Initialize()
   SLASH_COMMANDS["/ms"] = MS.ShowPanel
 	SLASH_COMMANDS["/mstest"] = MS.Test
 
-	LibCustomMenu:RegisterContextMenu(MS.ShowContextMenu)
+	LCM:RegisterContextMenu(MS.ShowContextMenu)
 
 	local scene = SM:GetScene("hud")
   scene:RegisterCallback("StateChange", MS.HUDSceneChange)
