@@ -195,6 +195,19 @@ function MS.CreateSettingsWindow()
     warning = "Will delete all settings from the selected profile and reload UI.",
 	})
 
+	table.insert(optionsData, {
+		type = "header",
+		name = "Misc.",
+	})
+
+	table.insert(optionsData, {
+		type = "checkbox",
+		name = "Chat Messages",
+		getFunc = function() return MS.SavedVars.chatMessages end,
+		setFunc = function(var) MS.SavedVars.chatMessages = var end,
+		width = "half",
+	})
+
   LAM:RegisterAddonPanel(MS.addonName, panelData)
 	LAM:RegisterOptionControls(MS.addonName, optionsData)
 end

@@ -55,6 +55,7 @@ MS.SavedVars = {}
 MS.varsVersion = 1
 
 MS.AccountWideDefaults = {
+	chatMessages = true,
   panelLeft = nil,
   panelTop = nil,
 	indLeft = nil,
@@ -296,7 +297,7 @@ function MS.UpdateScrollList(equipType)
 			c = MS.ListPool[i]
 		else
 			c = WM:CreateControlFromVirtual(name, parent, template, i)
-			c:SetParent(ScrollBoxScrollChild)
+			c:SetParent(parent:GetNamedChild("ScrollChild"))
 			table.insert(MS.ListPool, c)
 			c:ClearAnchors()
 			c:SetAnchor(TOPLEFT, ScrollBoxScrollChild, TOPLEFT, 0, (i-1) * 32)

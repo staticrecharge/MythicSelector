@@ -1,8 +1,8 @@
-## Title: Mythic Selector 1.1.0
+## Title: Mythic Selector
 ## Author: |CFF0000Static_Recharge|r
-## Version: 1.1.0
+## Version: 1.1.1
 ## AddOnVersion: 1
-## APIVersion: 101044
+## APIVersion: 101049
 ## SavedVariables: MythicSelectorVars
 ## DependsOn: LibAddonMenu-2.0 LibCustomMenu
 ## Description: Allows for fast switching between Mythic jewelry and regular jewelry.
